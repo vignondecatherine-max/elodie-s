@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>La scène que tu rejoues — Élodie S.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --terra: #B85C38; --terral: #D4845E; --dark: #2C1A0E;
+      --sand: #F5EDE4; --cream: #FFFDF8; --sage: #7A9E7E;
+      --gray: #9A8A7A; --grayl: #E0D4CC;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Jost', sans-serif; background: var(--dark); color: var(--cream); min-height: 100vh; }
+
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.2rem 3rem;
+      background: rgba(44,26,14,0.92); backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,253,248,0.08);
+    }
+    .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.15rem; color: var(--cream); text-decoration: none; }
+    .nav-back { font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gray); text-decoration: none; transition: color 0.25s; display: flex; align-items: center; gap: 0.5rem; }
+    .nav-back:hover { color: var(--terral); }
+
+    .exp-intro {
+      padding: 9rem 3rem 5rem;
+      text-align: center; max-width: 700px; margin: 0 auto;
+    }
+    .exp-tag { font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--terral); margin-bottom: 1.5rem; }
+    .exp-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.2rem, 4vw, 3.2rem); font-weight: 300; line-height: 1.15; color: var(--cream); margin-bottom: 1.2rem; }
+    .exp-sub { font-size: 0.95rem; font-weight: 300; line-height: 1.9; color: rgba(255,253,248,0.55); margin-bottom: 2.5rem; }
+    .exp-rule { width: 40px; height: 1px; background: var(--terra); margin: 0 auto 2.5rem; }
+
+    .scene-selector { padding: 0 3rem 4rem; max-width: 1000px; margin: 0 auto; }
+    .selector-label { font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray); text-align: center; margin-bottom: 2rem; }
+    .scenes-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    .scene-btn {
+      background: rgba(255,253,248,0.04); border: 1px solid rgba(255,253,248,0.1);
+      border-radius: 4px; padding: 1.6rem 1.4rem; cursor: pointer; text-align: left;
+      transition: all 0.25s; color: var(--cream); font-family: 'Jost', sans-serif;
+    }
+    .scene-btn:hover, .scene-btn.active { background: rgba(184,92,56,0.12); border-color: var(--terra); transform: translateY(-2px); }
+    .scene-btn-num { font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--terra); margin-bottom: 0.6rem; }
+    .scene-btn-title { font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; font-style: italic; line-height: 1.4; }
+
+    .exp-zone { max-width: 800px; margin: 0 auto; padding: 0 3rem 6rem; display: none; }
+    .exp-zone.active { display: block; }
+
+    .scene-text {
+      background: rgba(255,253,248,0.03); border: 1px solid rgba(255,253,248,0.08);
+      border-radius: 8px; padding: 3rem; margin-bottom: 3rem;
+      animation: fadeIn 0.5s ease;
+    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    .scene-narrative {
+      font-family: 'Cormorant Garamond', serif; font-size: 1.15rem; font-style: italic;
+      line-height: 1.85; color: rgba(255,253,248,0.85); margin-bottom: 1.2rem;
+    }
+
+    .scene-question { margin-bottom: 2rem; }
+    .question-text {
+      font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 300;
+      color: var(--cream); margin-bottom: 1.5rem; text-align: center;
+    }
+    .choices { display: flex; flex-direction: column; gap: 0.8rem; }
+    .choice-btn {
+      background: rgba(255,253,248,0.04); border: 1px solid rgba(255,253,248,0.1);
+      border-radius: 4px; padding: 1.2rem 1.6rem; cursor: pointer; text-align: left;
+      transition: all 0.25s; color: rgba(255,253,248,0.8);
+      font-family: 'Jost', sans-serif; font-size: 0.9rem; font-weight: 300; line-height: 1.5;
+    }
+    .choice-btn:hover { background: rgba(184,92,56,0.1); border-color: var(--terra); color: var(--cream); }
+
+    .revelation {
+      display: none;
+      background: linear-gradient(135deg, rgba(184,92,56,0.08), rgba(122,158,126,0.06));
+      border: 1px solid rgba(184,92,56,0.3); border-radius: 8px; padding: 3rem;
+      text-align: center; animation: fadeIn 0.6s ease;
+    }
+    .revelation.active { display: block; }
+    .rev-label { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--terral); margin-bottom: 1.5rem; }
+    .rev-phrase {
+      font-family: 'Cormorant Garamond', serif; font-size: clamp(1.5rem, 3vw, 2.1rem);
+      font-style: italic; font-weight: 300; color: var(--cream); line-height: 1.5; margin-bottom: 1.5rem;
+    }
+    .rev-explain { font-size: 0.9rem; font-weight: 300; line-height: 1.9; color: rgba(255,253,248,0.6); margin-bottom: 2rem; }
+    .rev-divider { width: 40px; height: 1px; background: var(--terra); margin: 0 auto 2rem; }
+    .rev-cta-label { font-size: 0.85rem; color: rgba(255,253,248,0.5); margin-bottom: 1.2rem; }
+    .btn-buy-rev {
+      display: inline-block; font-family: 'Jost', sans-serif; font-size: 0.85rem; font-weight: 500;
+      letter-spacing: 0.12em; text-transform: uppercase; color: var(--dark);
+      background: var(--cream); padding: 1rem 2rem; text-decoration: none; border-radius: 2px; transition: all 0.25s;
+    }
+    .btn-buy-rev:hover { background: var(--terra); color: var(--cream); }
+    .btn-restart {
+      display: inline-block; margin-top: 1rem; font-size: 0.78rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--gray); cursor: pointer; background: none; border: none;
+      font-family: 'Jost', sans-serif; transition: color 0.25s;
+    }
+    .btn-restart:hover { color: var(--terral); }
+
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .exp-intro, .scene-selector, .exp-zone { padding-left: 1.5rem; padding-right: 1.5rem; }
+      .scenes-grid { grid-template-columns: 1fr; }
+      .scene-text { padding: 2rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo">Élodie S.</a>
+    <a href="index.html" class="nav-back">← Retour</a>
+  </nav>
+
+  <div class="exp-intro">
+    <div class="exp-tag">Expérience immersive · Gratuite</div>
+    <h1 class="exp-title">La scène<br>que tu rejoues</h1>
+    <p class="exp-sub">
+      Trois situations amoureuses réelles. Tu choisis celle qui te ressemble. Tu réponds à une question. Et tu découvres ce qui se cache vraiment derrière ta façon de réagir.
+    </p>
+    <div class="exp-rule"></div>
+    <p style="font-size: 0.85rem; color: var(--gray);">Choisis la scène qui te parle le plus en ce moment.</p>
+  </div>
+
+  <div class="scene-selector">
+    <div class="selector-label">De quelle histoire tu te sens le plus proche ?</div>
+    <div class="scenes-grid">
+      <button class="scene-btn" onclick="loadScene('abandon')">
+        <div class="scene-btn-num">Scène 01</div>
+        <div class="scene-btn-title">Le silence qui dure depuis hier soir</div>
+      </button>
+      <button class="scene-btn" onclick="loadScene('fusion')">
+        <div class="scene-btn-num">Scène 02</div>
+        <div class="scene-btn-title">Tout allait bien. Et puis quelque chose a changé.</div>
+      </button>
+      <button class="scene-btn" onclick="loadScene('fuite')">
+        <div class="scene-btn-num">Scène 03</div>
+        <div class="scene-btn-title">Tu l'aimes. Et pourtant tu recules.</div>
+      </button>
+    </div>
+  </div>
+
+  <!-- SCÈNE 1 -->
+  <div class="exp-zone" id="scene-abandon">
+    <div class="scene-text">
+      <p class="scene-narrative">Il est 22h47. Ton téléphone est posé sur la table, face visible. Son dernier message date de cet après-midi et c'était une réponse courte, juste deux mots. Depuis, rien.</p>
+      <p class="scene-narrative">Tu as regardé l'écran peut-être vingt fois depuis le dîner. Tu le sais que c'est trop mais quelque chose dans ton ventre refuse de lâcher.</p>
+      <p class="scene-narrative">Est-ce qu'il est fâché ? Est-ce que tu as dit quelque chose ce matin ? Tu tournes et retournes la conversation dans ta tête sans trouver ce qui cloche. Peut-être que c'est rien. Mais ce soir ça ressemble à autre chose.</p>
+      <p class="scene-narrative">Tu commences à lui écrire quelque chose. Tu effaces. Tu poses le téléphone. Tu ne dors pas vraiment.</p>
+    </div>
+    <div class="scene-question">
+      <p class="question-text">Ce soir-là, tu es plutôt...</p>
+      <div class="choices">
+        <button class="choice-btn" onclick="showRevelation('abandon', 'a')">À chercher ce que tu as dit de travers.</button>
+        <button class="choice-btn" onclick="showRevelation('abandon', 'b')">À te convaincre que c'est le début de quelque chose qui va mal finir.</button>
+        <button class="choice-btn" onclick="showRevelation('abandon', 'c')">À vouloir écrire mais à te retenir pour pas avoir l'air trop insistant(e).</button>
+      </div>
+    </div>
+    <div class="revelation" id="rev-abandon-a">
+      <div class="rev-label">Ce que cette scène révèle</div>
+      <p class="rev-phrase">"Tu cherches toujours ta faute avant de chercher tes besoins."</p>
+      <p class="rev-explain">Quand quelque chose cloche, ton premier réflexe c'est de te retourner contre toi. Pas par plaisir, par habitude. Parce qu'à un moment, tu as appris que les problèmes relationnels avaient souvent une cause qui portait ton prénom. Le chapitre 2 du livre explore exactement d'où ça vient.</p>
+      <div class="rev-divider"></div>
+      <p class="rev-cta-label">Si ça t'a parlé, le livre va plus loin.</p>
+      <a href="livre.html" class="btn-buy-rev">Découvrir le livre — 15,99 €</a><br>
+      <button class="btn-restart" onclick="resetScene()">Recommencer avec une autre scène</button>
+    </div>
+    <div class="revelation" id="rev-abandon-b">
+      <div class="rev-label">Ce que cette scène révèle</div>
+      <p class="rev-phrase">"Tu n'as pas peur de ce silence. Tu as peur de ce qu'il pourrait annoncer."</p>
+      <p class="rev-explain">Avant même que quelque chose se passe vraiment, une partie de toi a déjà commencé à se préparer au pire. Ce n'est pas de la paranoïa. C'est une protection qui s'est mise en place à un moment de ta vie où partir sans prévenir était une réalité. Le chapitre 3 du livre parle de ce schéma et de comment il se rejoue sans que tu t'en rendes compte.</p>
+      <div class="rev-divider"></div>
+      <p class="rev-cta-label">Si ça t'a parlé, le livre va plus loin.</p>
+      <a href="livre.html" class="btn-buy-rev">Découvrir le livre — 15,99 €</a><br>
+      <button class="btn-restart" onclick="resetScene()">Recommencer avec une autre scène</button>
+    </div>
+    <div class="revelation" id="rev-abandon-c">
+      <div class="rev-label">Ce que cette scène révèle</div>
+      <p class="rev-phrase">"Tu gères l'image que tu renvoies. Même quand ça te coûte de ne rien dire."</p>
+      <p class="rev-explain">Tu as un besoin réel d'être rassuré(e), d'avoir du contact. Mais tu le fais taire pour ne pas paraître trop dépendant(e). Résultat : tu souffres en silence d'un manque que tu pourrais simplement exprimer. Le chapitre 4 du livre parle de la différence entre dépendance et expression saine d'un besoin.</p>
+      <div class="rev-divider"></div>
+      <p class="rev-cta-label">Si ça t'a parlé, le livre va plus loin.</p>
+      <a href="livre.html" class="btn-buy-rev">Découvrir le livre — 15,99 €</a><br>
+      <button class="btn-restart" onclick="resetScene()">Recommencer avec une autre scène</button>
+    </div>
+  </div>
+
+  <!-- SCÈNE 2 -->
+  <div class="exp-zone" id="scene-fusion">
+    <div class="scene-text">
+      <p class="scene-narrative">Ça fait deux ans. Vous faites tout ensemble. Les courses, les séries, les week-ends. Vous avez les mêmes amis maintenant, les mêmes habitudes, presque le même rythme.</p>
+      <p class="scene-narrative">Tu l'aimes. Tu n'as pas vraiment de raison de te plaindre. Mais depuis quelques semaines il y a quelque chose que tu n'arrives pas à nommer. Pas un problème. Plutôt un manque. Pas de lui, il est là. Un manque de quelque chose d'autre, que tu n'arrives même pas à définir.</p>
+      <p class="scene-narrative">Un soir un(e) ami(e) t'invite à sortir, juste vous deux. Tu dis oui. Et pendant cette soirée tu te sens différent(e). Plus léger(e). Plus toi. En rentrant tu ne sais pas quoi faire de cette sensation.</p>
+    </div>
+    <div class="scene-question">
+      <p class="question-text">Ce soir-là en rentrant, tu es plutôt...</p>
+      <div class="choices">
+        <button class="choice-btn" onclick="showRevelation('fusion', 'a')">Coupable de ne pas être satisfait(e) alors que tout va bien.</button>
+        <button class="choice-btn" onclick="showRevelation('fusion', 'b')">Soulagé(e) d'avoir retrouvé quelque chose de toi, sans trop savoir quoi.</button>
+        <button class="choice-btn" onclick="showRevelation('fusion', 'c')">En train de te demander si tu es encore vraiment amoureux(se).</button>
+      </div>
+    </div>
+    <div class="revelation" id="rev-fusion-a">
+      <div class="rev-label">Ce que cette scène révèle</div>
+      <p class="rev-phrase">"Tu confonds bonheur et absence de raisons de souffrir."</p>
+      <p class="rev-explain">Tu te dis que ça va parce qu'il n'y a pas de drame. Mais ne pas souffrir et être pleinement toi dans une relation ce n'est pas la même chose. Le chapitre 9 du livre parle de ce que l'espace personnel fait à une relation et pourquoi le manque que tu ressens est peut-être une information, pas un problème.</p>
+      <div class="rev-divider"></div>
+      <p class="rev-cta-label">Si ça t'a parlé, le livre va plus loin.</p>
+      <a href="livre.html" class="btn-buy-rev">Découvrir le livre — 15,99 €</a><br>
+      <button class="btn-restart" onclick="resetScene()">Recommencer avec une autre scène</button>
+    </div>
+    <div class="revelation" id="rev-fusion-b">
+      <div class="rev-label">Ce que cette scène révèle</div>
+      <p class="rev-phrase">"Tu t'es effacé(e) progressivement. Sans que personne ne te le demande."</p>
+      <p class="rev-explain">La fusion, ça ne se décide pas. Ça arrive doucement, par accumulation de petits renoncements. Tes passions, tes amitiés, tes projets, pas supprimés, juste mis en veille. Le chapitre 9 du livre explore pourquoi rester toi-même dans une relation n'est pas un luxe, c'est ce qui maintient le désir en vie.</p>
+      <div class="rev-divider"></div>
+      <p class="rev-cta-label">Si ça t'a parlé, le livre va plus loin.</p>
+      <a href="livre.html" class="btn-buy-rev">Découvrir le livre — 15,99 €</a><br>
+      <button class="btn-restart" onclick="resetScene()">Recommencer avec une autre scène</button>
+    </div>
+    <div class="revelation" id="rev-fusion-c">
+      <div class="rev-label">Ce que cette scène révèle</div>
+      <p class="rev-phrase">"Ce n'est peut-être pas l'amour qui s'est éteint. C'est toi qui t'es éteint(e)."</p>
+      <p class="rev-explain">L'amour et le désir ne fonctionnent pas pareil. L'un cherche la proximité, l'autre a besoin d'un peu de distance et de mystère pour exister. Avant de conclure que tu n'aimes plus, le chapitre 9 du livre t'invite à te poser une autre question : est-ce que tu existes encore, à côté de lui ?</p>
+      <div class="rev-divider"></div>
+      <p class="rev-cta-label">Si ça t'a parlé, le livre va plus loin.</p>
+      <a href="livre.html" class="btn-buy-rev">Découvrir le livre — 15,99 €</a><br>
+      <button class="btn-restart" onclick="resetScene()">Recommencer avec une autre scène</button>
+    </div>
+  </div>
+
+  <!-- SCÈNE 3 -->
+  <div class="exp-zone" id="scene-fuite">
+    <div class="scene-text">
+      <p class="scene-narrative">Ça fait trois semaines que vous vous voyez. Cette personne est bien. Vraiment bien. Elle est attentionnée, drôle, elle t'écoute. Il ne manque rien sur le papier.</p>
+      <p class="scene-narrative">Et pourtant. Depuis quelques jours tu prends plus de temps à répondre. Tu annules un plan sans vraiment de raison. Tu commences à chercher des défauts, une façon de parler, quelque chose qu'il ou elle a dit, rien de grave en soi. Mais tu le cherches.</p>
+      <p class="scene-narrative">Dans ta tête tu te dis que c'est peut-être pas le bon moment. Que vous n'êtes pas si compatibles que ça. Mais au fond tu sais que ce n'est pas vraiment ça.</p>
+      <p class="scene-narrative">Tu recules. Et tu ne sais pas encore pourquoi.</p>
+    </div>
+    <div class="scene-question">
+      <p class="question-text">Quand tu recules comme ça, tu es plutôt...</p>
+      <div class="choices">
+        <button class="choice-btn" onclick="showRevelation('fuite', 'a')">À avoir peur que ça devienne sérieux. Que ça compte vraiment.</button>
+        <button class="choice-btn" onclick="showRevelation('fuite', 'b')">À partir avant que l'autre ait l'occasion de te décevoir.</button>
+        <button class="choice-btn" onclick="showRevelation('fuite', 'c')">À ne pas vraiment savoir. Quelque chose se ferme et tu comprends pas pourquoi.</button>
+      </div>
+    </div>
+    <div class="revelation" id="rev-fuite-a">
+      <div class="rev-label">Ce que cette scène révèle</div>
+      <p class="rev-phrase">"L'intimité te fait peur. Pas la personne, ce que ça implique d'être vraiment vu(e)."</p>
+      <p class="rev-explain">Plus c'est réel, plus c'est risqué. Et plus c'est risqué, plus quelque chose en toi cherche à reprendre le contrôle en créant de la distance avant que l'autre n'ait l'occasion de te décevoir ou de partir. Le chapitre 8 du livre parle de ce que ça coûte de rester sur ses gardes dans une relation.</p>
+      <div class="rev-divider"></div>
+      <p class="rev-cta-label">Si ça t'a parlé, le livre va plus loin.</p>
+      <a href="livre.html" class="btn-buy-rev">Découvrir le livre — 15,99 €</a><br>
+      <button class="btn-restart" onclick="resetScene()">Recommencer avec une autre scène</button>
+    </div>
+    <div class="revelation" id="rev-fuite-b">
+      <div class="rev-label">Ce que cette scène révèle</div>
+      <p class="rev-phrase">"Tu pars avant d'avoir eu le temps d'être trahi(e). C'est une protection. Qui coûte cher."</p>
+      <p class="rev-explain">Tu ne fuis pas cette personne. Tu fuis ce que tu as déjà vécu, une blessure ancienne qui te dit que ça finit toujours pareil. Alors tu joues d'avance. Tu contrôles la fin. Mais tu n'arrives jamais nulle part. Le chapitre 2 du livre parle de ce mécanisme et de comment s'en sortir.</p>
+      <div class="rev-divider"></div>
+      <p class="rev-cta-label">Si ça t'a parlé, le livre va plus loin.</p>
+      <a href="livre.html" class="btn-buy-rev">Découvrir le livre — 15,99 €</a><br>
+      <button class="btn-restart" onclick="resetScene()">Recommencer avec une autre scène</button>
+    </div>
+    <div class="revelation" id="rev-fuite-c">
+      <div class="rev-label">Ce que cette scène révèle</div>
+      <p class="rev-phrase">"Quelque chose en toi sait ce qui se passe. Il refuse juste encore d'être nommé."</p>
+      <p class="rev-explain">Le fait que tu ne comprennes pas encore ce qui se ferme ne veut pas dire que c'est inexplicable. Ça veut dire que le mécanisme est plus profond que ce que tu peux voir seul(e) de l'intérieur. Le chapitre 3 du livre est fait pour mettre des mots sur ce qui agissait jusque-là dans l'ombre.</p>
+      <div class="rev-divider"></div>
+      <p class="rev-cta-label">Si ça t'a parlé, le livre va plus loin.</p>
+      <a href="livre.html" class="btn-buy-rev">Découvrir le livre — 15,99 €</a><br>
+      <button class="btn-restart" onclick="resetScene()">Recommencer avec une autre scène</button>
+    </div>
+  </div>
+
+  <script>
+    function loadScene(id) {
+      document.querySelectorAll('.exp-zone').forEach(z => z.classList.remove('active'));
+      document.querySelectorAll('.scene-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.revelation').forEach(r => r.classList.remove('active'));
+      document.querySelectorAll('.choices').forEach(c => { c.style.opacity = '1'; c.style.pointerEvents = 'auto'; });
+      document.getElementById('scene-' + id).classList.add('active');
+      event.currentTarget.classList.add('active');
+      setTimeout(() => {
+        document.getElementById('scene-' + id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    }
+
+    function showRevelation(scene, choice) {
+      document.querySelectorAll(`#scene-${scene} .choices`).forEach(c => { c.style.opacity = '0.3'; c.style.pointerEvents = 'none'; });
+      const rev = document.getElementById(`rev-${scene}-${choice}`);
+      rev.classList.add('active');
+      setTimeout(() => rev.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100);
+    }
+
+    function resetScene() {
+      document.querySelectorAll('.exp-zone').forEach(z => z.classList.remove('active'));
+      document.querySelectorAll('.scene-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.revelation').forEach(r => r.classList.remove('active'));
+      document.querySelectorAll('.choices').forEach(c => { c.style.opacity = '1'; c.style.pointerEvents = 'auto'; });
+      document.querySelector('.scene-selector').scrollIntoView({ behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>

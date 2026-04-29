@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Le livre — S'ouvrir à l'amour · Élodie S.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --terra: #B85C38; --terral: #D4845E; --dark: #2C1A0E;
+      --sand: #F5EDE4; --cream: #FFFDF8; --sage: #7A9E7E;
+      --gray: #9A8A7A; --grayl: #E0D4CC;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Jost', sans-serif; background: var(--cream); color: var(--dark); }
+
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.2rem 3rem;
+      background: rgba(255,253,248,0.92); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--grayl);
+    }
+    .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.15rem; color: var(--dark); text-decoration: none; }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a { font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gray); text-decoration: none; transition: color 0.25s; }
+    .nav-links a:hover { color: var(--terra); }
+    .nav-cta { font-size: 0.78rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--cream); background: var(--terra); padding: 0.65rem 1.4rem; text-decoration: none; border-radius: 2px; transition: background 0.25s; }
+    .nav-cta:hover { background: var(--dark); }
+
+    /* HERO LIVRE */
+    .book-hero {
+      padding: 9rem 3rem 6rem;
+      display: grid; grid-template-columns: 1fr 1.2fr; gap: 6rem;
+      max-width: 1100px; margin: 0 auto; align-items: center;
+    }
+    .book-hero-img { display: flex; justify-content: center; }
+    .book-hero-img img {
+      width: 300px; border-radius: 2px;
+      box-shadow: 0 30px 70px rgba(44,26,14,0.18), 0 10px 30px rgba(44,26,14,0.1);
+    }
+    .book-tag { font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--terra); margin-bottom: 1.2rem; display: flex; align-items: center; gap: 0.8rem; }
+    .book-tag::before { content: ''; width: 2rem; height: 1px; background: var(--terra); }
+    .book-hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.2rem, 4vw, 3.2rem); font-weight: 300; line-height: 1.15; color: var(--dark); margin-bottom: 0.6rem; }
+    .book-hero-sub { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-style: italic; color: var(--gray); margin-bottom: 1.8rem; }
+    .book-desc { font-size: 0.95rem; font-weight: 300; line-height: 1.9; color: var(--gray); margin-bottom: 2.2rem; }
+
+    /* PRIX & ACHAT */
+    .buy-block {
+      background: var(--sand); border-radius: 8px;
+      padding: 2rem; border: 1px solid var(--grayl);
+    }
+    .buy-price { font-family: 'Cormorant Garamond', serif; font-size: 2.8rem; color: var(--dark); margin-bottom: 0.2rem; }
+    .buy-note { font-size: 0.75rem; color: var(--gray); margin-bottom: 1.5rem; }
+    .buy-features { display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 1.8rem; }
+    .buy-feature { display: flex; align-items: center; gap: 0.7rem; font-size: 0.88rem; color: var(--dark); }
+    .buy-feature::before { content: '✓'; color: var(--sage); font-weight: 500; flex-shrink: 0; }
+    .btn-buy {
+      display: block; text-align: center;
+      font-family: 'Jost', sans-serif; font-size: 0.88rem; font-weight: 500;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--cream); background: var(--terra);
+      padding: 1.1rem 2rem; text-decoration: none; border-radius: 2px;
+      transition: all 0.25s; margin-bottom: 1rem;
+    }
+    .btn-buy:hover { background: var(--dark); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(44,26,14,0.15); }
+    .buy-secure { font-size: 0.72rem; color: var(--gray); text-align: center; }
+    .buy-bonus { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--grayl); font-size: 0.82rem; color: var(--sage); display: flex; align-items: center; gap: 0.5rem; }
+    .buy-bonus::before { content: '✦'; font-size: 0.6rem; }
+
+    /* CHAPITRES */
+    .section-chapters {
+      background: var(--sand); padding: 6rem 3rem;
+    }
+    .chapters-inner { max-width: 900px; margin: 0 auto; }
+    .section-label { font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--terra); margin-bottom: 1rem; }
+    .section-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.8rem, 3vw, 2.4rem); font-weight: 300; color: var(--dark); margin-bottom: 3rem; }
+    .chapters-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .chapter-item {
+      background: var(--cream); border-radius: 4px; padding: 1.4rem 1.6rem;
+      border-bottom: 2px solid transparent;
+      transition: border-color 0.25s, transform 0.2s;
+    }
+    .chapter-item:hover { border-color: var(--terra); transform: translateY(-2px); }
+    .chapter-num { font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--terra); margin-bottom: 0.4rem; }
+    .chapter-title { font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; font-style: italic; color: var(--dark); line-height: 1.4; }
+
+    /* TEMOIGNAGES */
+    .section-quotes { padding: 6rem 3rem; max-width: 900px; margin: 0 auto; }
+    .quotes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2.5rem; }
+    .quote-card { background: var(--sand); border-radius: 4px; padding: 2rem; position: relative; }
+    .quote-mark { font-family: 'Cormorant Garamond', serif; font-size: 3rem; color: var(--terra); opacity: 0.3; line-height: 1; margin-bottom: 0.5rem; }
+    .quote-text { font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; font-style: italic; color: var(--dark); line-height: 1.65; margin-bottom: 1rem; }
+    .quote-author { font-size: 0.78rem; color: var(--gray); letter-spacing: 0.05em; }
+
+    /* BONUS AUDIO */
+    .section-bonus {
+      background: var(--dark); padding: 6rem 3rem;
+    }
+    .bonus-inner { max-width: 700px; margin: 0 auto; text-align: center; }
+    .bonus-icon { font-size: 2.5rem; margin-bottom: 1.5rem; }
+    .bonus-label { font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--terral); margin-bottom: 1rem; }
+    .bonus-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.8rem, 3vw, 2.4rem); font-weight: 300; color: var(--cream); margin-bottom: 1.2rem; line-height: 1.3; }
+    .bonus-text { font-size: 0.95rem; font-weight: 300; line-height: 1.9; color: rgba(255,253,248,0.65); margin-bottom: 0.5rem; }
+    .bonus-note { font-size: 0.82rem; color: var(--sage); margin-top: 1.5rem; }
+
+    /* CTA FINAL */
+    .section-cta { padding: 6rem 3rem; text-align: center; }
+    .cta-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.8rem, 3vw, 2.4rem); font-weight: 300; color: var(--dark); margin-bottom: 0.8rem; }
+    .cta-sub { font-size: 0.95rem; color: var(--gray); margin-bottom: 2rem; }
+    .btn-primary { display: inline-block; font-family: 'Jost', sans-serif; font-size: 0.88rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--cream); background: var(--terra); padding: 1.1rem 2.4rem; text-decoration: none; border-radius: 2px; transition: all 0.25s; }
+    .btn-primary:hover { background: var(--dark); transform: translateY(-2px); }
+
+    footer { padding: 2.5rem 3rem; border-top: 1px solid var(--grayl); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+    .footer-logo { font-family: 'Cormorant Garamond', serif; font-size: 1rem; color: var(--gray); text-decoration: none; }
+    .footer-text { font-size: 0.75rem; color: var(--grayl); }
+
+    .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      .book-hero { grid-template-columns: 1fr; padding: 7rem 1.5rem 3rem; gap: 2.5rem; text-align: center; }
+      .book-tag { justify-content: center; }
+      .book-hero-img img { width: 220px; }
+      .chapters-grid, .quotes-grid { grid-template-columns: 1fr; }
+      .section-chapters, .section-quotes, .section-bonus, .section-cta { padding: 4rem 1.5rem; }
+      footer { padding: 2rem 1.5rem; flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo">Élodie S.</a>
+    <ul class="nav-links">
+      <li><a href="index.html">Accueil</a></li>
+      <li><a href="experience.html">L'expérience</a></li>
+    </ul>
+    <a href="#acheter" class="nav-cta">Acheter</a>
+  </nav>
+
+  <!-- HERO LIVRE -->
+  <div class="book-hero">
+    <div class="book-hero-img fade-up">
+      <img src="assets/cover.png" alt="S'ouvrir à l'amour — Élodie S." />
+    </div>
+    <div class="fade-up" style="transition-delay:0.15s">
+      <div class="book-tag">Le livre</div>
+      <h1 class="book-hero-title">S'ouvrir à l'amour</h1>
+      <p class="book-hero-sub">Cheminer vers soi pour mieux aimer l'autre</p>
+      <p class="book-desc">
+        Ce livre ne te dit pas comment trouver la bonne personne.
+        Il t'aide à comprendre pourquoi tu tombes toujours dans les mêmes relations.
+        Pourquoi tu donnes trop. Pourquoi tu as peur. Pourquoi l'amour te coûte
+        parfois ce que tu es profondément.
+        <br><br>
+        10 chapitres. Une progression qui commence en toi.
+      </p>
+
+      <div id="acheter" class="buy-block">
+        <div class="buy-price">15,99 €</div>
+        <div class="buy-note">Paiement sécurisé · PDF téléchargeable immédiatement</div>
+        <div class="buy-features">
+          <div class="buy-feature">10 chapitres progressifs</div>
+          <div class="buy-feature">Exercices pratiques à chaque chapitre</div>
+          <div class="buy-feature">8 témoignages en annexe</div>
+          <div class="buy-feature">Schémas et outils concrets</div>
+        </div>
+        <a href="https://gumroad.com" target="_blank" class="btn-buy">Obtenir le livre maintenant</a>
+        <div class="buy-secure">🔒 Paiement sécurisé par Gumroad</div>
+        <div class="buy-bonus">Audio personnalisé offert avec ton achat</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHAPITRES -->
+  <section class="section-chapters">
+    <div class="chapters-inner">
+      <div class="section-label fade-up">Au programme</div>
+      <h2 class="section-title fade-up">10 axes pour comprendre<br>comment tu aimes</h2>
+      <div class="chapters-grid">
+        <div class="chapter-item fade-up">
+          <div class="chapter-num">Chapitre 01</div>
+          <div class="chapter-title">Se rencontrer soi-même pour apprendre à s'aimer</div>
+        </div>
+        <div class="chapter-item fade-up">
+          <div class="chapter-num">Chapitre 02</div>
+          <div class="chapter-title">Faire face aux blessures du passé pour s'en détacher</div>
+        </div>
+        <div class="chapter-item fade-up">
+          <div class="chapter-num">Chapitre 03</div>
+          <div class="chapter-title">Reconnaître ses schémas répétitifs pour en sortir</div>
+        </div>
+        <div class="chapter-item fade-up">
+          <div class="chapter-num">Chapitre 04</div>
+          <div class="chapter-title">Renouer avec l'estime de soi pour sortir de la dépendance affective</div>
+        </div>
+        <div class="chapter-item fade-up">
+          <div class="chapter-num">Chapitre 05</div>
+          <div class="chapter-title">Clarifier ses intentions amoureuses</div>
+        </div>
+        <div class="chapter-item fade-up">
+          <div class="chapter-num">Chapitre 06</div>
+          <div class="chapter-title">Apprendre à poser ses limites</div>
+        </div>
+        <div class="chapter-item fade-up">
+          <div class="chapter-num">Chapitre 07</div>
+          <div class="chapter-title">Développer une communication authentique</div>
+        </div>
+        <div class="chapter-item fade-up">
+          <div class="chapter-num">Chapitre 08</div>
+          <div class="chapter-title">S'ouvrir à la vulnérabilité</div>
+        </div>
+        <div class="chapter-item fade-up">
+          <div class="chapter-num">Chapitre 09</div>
+          <div class="chapter-title">Aimer sans fusionner</div>
+        </div>
+        <div class="chapter-item fade-up">
+          <div class="chapter-num">Chapitre 10</div>
+          <div class="chapter-title">Choisir l'amour chaque jour</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TEMOIGNAGES -->
+  <section class="section-quotes">
+    <div class="section-label fade-up">Ils se sont reconnus</div>
+    <h2 class="section-title fade-up">Ce qu'ils ont traversé</h2>
+    <div class="quotes-grid">
+      <div class="quote-card fade-up">
+        <div class="quote-mark">"</div>
+        <p class="quote-text">Je me suis rendu compte que ce n'est pas juste éviter les conflits. C'est aussi ne pas se respecter soi-même.</p>
+        <div class="quote-author">Aurélien, 42 ans</div>
+      </div>
+      <div class="quote-card fade-up">
+        <div class="quote-mark">"</div>
+        <p class="quote-text">Au fond, tout ce que j'ai retenu, c'est que je ne serai jamais assez.</p>
+        <div class="quote-author">Camille, 34 ans</div>
+      </div>
+      <div class="quote-card fade-up">
+        <div class="quote-mark">"</div>
+        <p class="quote-text">Je donne tout, et au final, je me retrouve seule. J'essaye de me demander si je fais ça par envie… ou par peur.</p>
+        <div class="quote-author">Sofia, 28 ans</div>
+      </div>
+      <div class="quote-card fade-up">
+        <div class="quote-mark">"</div>
+        <p class="quote-text">Elle n'est pas parfaite. Elle a même beaucoup de défauts. Mais je la choisis tous les jours. Plus je la choisis, plus je l'aime.</p>
+        <div class="quote-author">Henri, 88 ans</div>
+      </div>
+    </div>
+  </section>
+
+
+
+  <!-- AUDIO SECTION -->
+  <section style="background: var(--dark); padding: 6rem 3rem;">
+    <div style="max-width: 700px; margin: 0 auto; text-align: center;">
+      <p class="section-label fade-up" style="color: var(--terral);">Inclus avec le livre</p>
+      <h2 class="fade-up" style="font-family: 'Cormorant Garamond', serif; font-size: clamp(1.8rem, 3vw, 2.4rem); font-weight: 300; color: var(--cream); margin-bottom: 1.8rem; line-height: 1.3;">Ce qui t'attend après</h2>
+      <p class="fade-up" style="font-size: 0.95rem; font-weight: 300; line-height: 1.9; color: rgba(255,253,248,0.65); max-width: 560px; margin: 0 auto;">
+        Avec ton achat tu reçois un accès à un espace personnel. Tu réponds à quelques questions sur ce que tu traverses en ce moment. Et tu reçois un audio créé uniquement pour toi, avec une musique qui te plongera dans une ambiance bienveillante les jours où tu auras besoin de te rappeler qui tu es.
+      </p>
+    </div>
+  </section>
+
+  <!-- CTA FINAL -->
+  <section class="section-cta">
+    <h2 class="cta-title fade-up">Prêt(e) à commencer ?</h2>
+    <p class="cta-sub fade-up">Tu n'as pas besoin d'être en crise pour lire ce livre.<br>Tu as juste besoin d'avoir envie de comprendre.</p>
+    <a href="https://gumroad.com" target="_blank" class="btn-primary fade-up">Obtenir le livre — 15,99 €</a>
+  </section>
+
+  <footer>
+    <a href="index.html" class="footer-logo">Élodie S.</a>
+    <span class="footer-text">© 2025 Élodie S. · Tous droits réservés</span>
+  </footer>
+
+  <script>
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
+    document.querySelectorAll('.book-hero .fade-up').forEach((el, i) => {
+      setTimeout(() => el.classList.add('visible'), 100 + i * 150);
+    });
+  </script>
+</body>
+</html>

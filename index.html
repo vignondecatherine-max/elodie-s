@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Élodie S. — S'ouvrir à l'amour</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --terra:   #B85C38;
+      --terral:  #D4845E;
+      --dark:    #2C1A0E;
+      --sand:    #F5EDE4;
+      --cream:   #FFFDF8;
+      --sage:    #7A9E7E;
+      --sagel:   #C8DCC8;
+      --gray:    #9A8A7A;
+      --grayl:   #E0D4CC;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Jost', sans-serif;
+      background: var(--cream);
+      color: var(--dark);
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.2rem 3rem;
+      background: rgba(255,253,248,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--grayl);
+    }
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15rem; font-weight: 400; letter-spacing: 0.08em;
+      color: var(--dark); text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a {
+      font-size: 0.78rem; font-weight: 400; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--gray);
+      text-decoration: none; transition: color 0.25s;
+    }
+    .nav-links a:hover { color: var(--terra); }
+    .nav-cta {
+      font-size: 0.78rem; font-weight: 500; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--cream);
+      background: var(--terra); padding: 0.65rem 1.4rem;
+      text-decoration: none; border-radius: 2px;
+      transition: background 0.25s, transform 0.2s;
+    }
+    .nav-cta:hover { background: var(--dark); transform: translateY(-1px); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: grid; grid-template-columns: 1fr 1fr;
+      align-items: center;
+      padding: 0 3rem; padding-top: 5rem;
+      position: relative; overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 80% 20%, rgba(184,92,56,0.07) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 60% at 20% 80%, rgba(200,220,200,0.15) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 40% at 60% 90%, rgba(212,132,94,0.06) 0%, transparent 50%);
+    }
+    .hero-left { position: relative; z-index: 1; padding-right: 4rem; }
+    .hero-tag {
+      font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--terra); margin-bottom: 1.6rem;
+      display: flex; align-items: center; gap: 0.8rem;
+    }
+    .hero-tag::before {
+      content: ''; display: block; width: 2rem; height: 1px; background: var(--terra);
+    }
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.8rem, 5vw, 4.2rem);
+      font-weight: 300; line-height: 1.12;
+      color: var(--dark); margin-bottom: 1.8rem;
+    }
+    .hero-title em { font-style: italic; color: var(--terra); }
+    .hero-slogan {
+      font-size: 1.05rem; font-weight: 300; line-height: 1.75;
+      color: var(--gray); max-width: 42ch; margin-bottom: 2.8rem;
+    }
+    .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .btn-primary {
+      font-family: 'Jost', sans-serif;
+      font-size: 0.8rem; font-weight: 500; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--cream);
+      background: var(--terra); padding: 1rem 2rem;
+      text-decoration: none; border-radius: 2px;
+      transition: all 0.25s; display: inline-block;
+    }
+    .btn-primary:hover { background: var(--dark); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(44,26,14,0.15); }
+    .btn-secondary {
+      font-family: 'Jost', sans-serif;
+      font-size: 0.8rem; font-weight: 400; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--terra);
+      background: transparent; padding: 1rem 2rem;
+      text-decoration: none; border-radius: 2px;
+      border: 1px solid var(--terra);
+      transition: all 0.25s; display: inline-block;
+    }
+    .btn-secondary:hover { background: var(--sand); transform: translateY(-2px); }
+
+    .hero-right {
+      position: relative; z-index: 1;
+      display: flex; justify-content: center; align-items: center;
+    }
+    .book-wrapper {
+      position: relative;
+      animation: float 5s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-12px); }
+    }
+    .book-cover {
+      width: 280px; max-width: 90%;
+      box-shadow:
+        0 20px 60px rgba(44,26,14,0.18),
+        0 8px 20px rgba(44,26,14,0.1),
+        -6px 0 0 rgba(184,92,56,0.15);
+      border-radius: 2px;
+    }
+    .book-glow {
+      position: absolute; inset: -20%; z-index: -1;
+      background: radial-gradient(ellipse, rgba(184,92,56,0.12) 0%, transparent 70%);
+      filter: blur(20px);
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      display: flex; align-items: center; gap: 1.5rem;
+      padding: 0 3rem; margin: 1rem 0;
+    }
+    .divider-line { flex: 1; height: 1px; background: var(--grayl); }
+    .divider-icon { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; color: var(--terra); }
+
+    /* ── SECTION : ACCROCHE ── */
+    .section-hook {
+      padding: 6rem 3rem;
+      max-width: 800px; margin: 0 auto;
+      text-align: center;
+    }
+    .section-hook blockquote {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.5rem, 3vw, 2.1rem);
+      font-weight: 300; font-style: italic;
+      line-height: 1.6; color: var(--dark);
+      position: relative;
+    }
+    .section-hook blockquote::before {
+      content: '"';
+      font-size: 5rem; color: var(--terra); opacity: 0.2;
+      position: absolute; top: -1.5rem; left: -1rem;
+      font-style: normal; line-height: 1;
+    }
+    .section-hook p {
+      margin-top: 2rem;
+      font-size: 1rem; font-weight: 300; line-height: 1.8;
+      color: var(--gray);
+    }
+
+    /* ── SECTION : DEUX CHEMINS ── */
+    .section-paths {
+      background: var(--sand);
+      padding: 6rem 3rem;
+    }
+    .paths-inner {
+      max-width: 1100px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 4rem;
+      align-items: start;
+    }
+    .paths-label {
+      font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--terra); margin-bottom: 1.2rem;
+    }
+    .paths-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 3.5vw, 2.8rem);
+      font-weight: 300; line-height: 1.2;
+      color: var(--dark); margin-bottom: 2rem;
+    }
+    .paths-text {
+      font-size: 0.95rem; font-weight: 300; line-height: 1.9;
+      color: var(--gray);
+    }
+    .paths-right { display: flex; flex-direction: column; gap: 1.2rem; margin-top: 1rem; }
+    .path-card {
+      background: var(--cream); border-radius: 4px;
+      padding: 1.4rem 1.8rem;
+      border-left: 3px solid var(--terra);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .path-card:hover { transform: translateX(4px); box-shadow: 0 4px 20px rgba(44,26,14,0.08); }
+    .path-card-num {
+      font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--terra); margin-bottom: 0.4rem;
+    }
+    .path-card-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem; font-style: italic; color: var(--dark);
+    }
+
+    /* ── SECTION : EXPÉRIENCE ── */
+    .section-exp {
+      padding: 7rem 3rem;
+      max-width: 1100px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 5rem;
+      align-items: center;
+    }
+    .exp-visual {
+      position: relative; display: flex; justify-content: center;
+    }
+    .exp-circle {
+      width: 320px; height: 320px; border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, var(--sand), var(--grayl));
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+    }
+    .exp-circle-inner {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem; font-style: italic; font-weight: 300;
+      color: var(--dark); text-align: center; padding: 2rem;
+      line-height: 1.5;
+    }
+    .exp-circle::after {
+      content: '';
+      position: absolute; inset: -12px;
+      border-radius: 50%;
+      border: 1px dashed var(--terra);
+      opacity: 0.4;
+      animation: spin 20s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .exp-dot {
+      position: absolute; width: 10px; height: 10px;
+      border-radius: 50%; background: var(--terra);
+      top: -5px; left: 50%;
+      transform-origin: 0 165px;
+    }
+
+    .exp-content .paths-label { margin-bottom: 1rem; }
+    .exp-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.8rem, 3vw, 2.5rem);
+      font-weight: 300; line-height: 1.25;
+      color: var(--dark); margin-bottom: 1.4rem;
+    }
+    .exp-text {
+      font-size: 0.95rem; font-weight: 300; line-height: 1.9;
+      color: var(--gray); margin-bottom: 2rem;
+    }
+
+    /* ── SECTION : LE LIVRE ── */
+    .section-book {
+      background: var(--dark);
+      padding: 7rem 3rem;
+    }
+    .book-inner {
+      max-width: 1100px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1.4fr; gap: 5rem;
+      align-items: center;
+    }
+    .book-img-wrap { display: flex; justify-content: center; }
+    .book-img-wrap img { width: 240px; box-shadow: 0 24px 60px rgba(0,0,0,0.4); border-radius: 2px; }
+    .book-content .paths-label { color: var(--terral); }
+    .book-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      font-weight: 300; line-height: 1.2;
+      color: var(--cream); margin-bottom: 1.2rem;
+    }
+    .book-text {
+      font-size: 0.95rem; font-weight: 300; line-height: 1.9;
+      color: rgba(255,253,248,0.65); margin-bottom: 0.8rem;
+    }
+    .book-features {
+      display: flex; flex-direction: column; gap: 0.7rem;
+      margin: 1.8rem 0 2.4rem;
+    }
+    .book-feature {
+      display: flex; align-items: center; gap: 0.8rem;
+      font-size: 0.88rem; color: rgba(255,253,248,0.8);
+    }
+    .book-feature::before {
+      content: ''; width: 6px; height: 6px; border-radius: 50%;
+      background: var(--terra); flex-shrink: 0;
+    }
+    .book-price {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.2rem; color: var(--cream);
+      margin-bottom: 0.3rem;
+    }
+    .book-price-note {
+      font-size: 0.75rem; color: rgba(255,253,248,0.45);
+      margin-bottom: 1.8rem;
+    }
+    .btn-buy {
+      display: inline-block; font-family: 'Jost', sans-serif;
+      font-size: 0.85rem; font-weight: 500; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--dark);
+      background: var(--cream); padding: 1.1rem 2.4rem;
+      text-decoration: none; border-radius: 2px;
+      transition: all 0.25s;
+    }
+    .btn-buy:hover { background: var(--terra); color: var(--cream); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+    .book-bonus {
+      margin-top: 1.2rem;
+      font-size: 0.78rem; color: var(--sage);
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .book-bonus::before { content: '✦'; font-size: 0.6rem; }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 2.5rem 3rem;
+      border-top: 1px solid var(--grayl);
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .footer-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem; color: var(--gray); text-decoration: none;
+    }
+    .footer-text { font-size: 0.75rem; color: var(--grayl); }
+
+    /* ── FADE IN ── */
+    .fade-up {
+      opacity: 0; transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── MOBILE ── */
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      .hero { grid-template-columns: 1fr; padding: 6rem 1.5rem 3rem; text-align: center; }
+      .hero-left { padding-right: 0; }
+      .hero-tag { justify-content: center; }
+      .hero-actions { justify-content: center; }
+      .hero-right { margin-top: 3rem; }
+      .paths-inner, .section-exp, .book-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+      .section-hook, .section-paths, .section-exp, .section-book { padding: 4rem 1.5rem; }
+      .exp-circle { width: 260px; height: 260px; }
+      .divider { padding: 0 1.5rem; }
+      footer { padding: 2rem 1.5rem; flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="index.html" class="nav-logo">Élodie S.</a>
+    <ul class="nav-links">
+      <li><a href="livre.html">Le livre</a></li>
+      <li><a href="experience.html">L'expérience</a></li>
+    </ul>
+    <a href="livre.html" class="nav-cta">Acheter le livre</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-left fade-up">
+      <div class="hero-tag">Élodie S.</div>
+      <h1 class="hero-title">
+        Tu mérites une relation<br>qui ne te coûte pas<br><em>qui tu es.</em>
+      </h1>
+      <p class="hero-slogan">
+        Un livre sur les schémas invisibles qui dirigent ta vie amoureuse.
+      </p>
+      <div class="hero-actions">
+        <a href="livre.html" class="btn-primary">Découvrir le livre — 15,99 €</a>
+        <a href="experience.html" class="btn-secondary">Vivre l'expérience</a>
+      </div>
+    </div>
+    <div class="hero-right fade-up" style="transition-delay: 0.2s">
+      <div class="book-wrapper">
+        <div class="book-glow"></div>
+        <img class="book-cover" src="assets/cover.png" alt="S'ouvrir à l'amour — Élodie S." />
+      </div>
+    </div>
+  </section>
+
+  <div class="divider">
+    <div class="divider-line"></div>
+    <div class="divider-icon">✦</div>
+    <div class="divider-line"></div>
+  </div>
+
+  <!-- ACCROCHE -->
+  <section class="section-hook">
+    <blockquote class="fade-up">
+      Et si le problème n'était pas les personnes que tu choisis, mais ce que tu cherches sans le savoir dans chacune d'elles ?
+    </blockquote>
+    <p class="fade-up">
+      Peut-être que tu donnes tout dans une relation et que tu finis toujours épuisée.
+      Peut-être que tu retombes sur le même type de personne en te disant que cette fois ce sera différent.
+      Peut-être que tu analyses chaque message, chaque silence, chaque changement de ton en cherchant une explication qui ne vient pas.
+      Ou peut-être que c'est plus flou que ça. Juste cette sensation que l'amour te coûte trop, sans savoir exactement pourquoi.
+      <br><br>
+      Ce livre ne te dit pas ce que tu fais mal. Il t'aide à comprendre ce qui se passe vraiment.
+    </p>
+  </section>
+
+  <!-- DEUX CHEMINS -->
+  <section class="section-paths">
+    <div class="paths-inner">
+      <div class="fade-up">
+        <div class="paths-label">Ce que le livre explore</div>
+        <h2 class="paths-title">Une exploration lucide de tes schémas relationnels</h2>
+        <p class="paths-text">
+          Ce que tu répètes sans le voir. Ce que tu tolères sans le choisir.
+          Ce que tu crois vouloir… mais qui te fait souffrir.
+        </p>
+      </div>
+      <div class="paths-right fade-up">
+        <div class="path-card">
+          <div class="path-card-num">Axe 01</div>
+          <div class="path-card-text">Se rencontrer soi-même pour apprendre à s'aimer</div>
+        </div>
+        <div class="path-card">
+          <div class="path-card-num">Axe 02</div>
+          <div class="path-card-text">Faire face aux blessures du passé pour s'en détacher</div>
+        </div>
+        <div class="path-card">
+          <div class="path-card-num">Axe 03</div>
+          <div class="path-card-text">Reconnaître ses schémas répétitifs pour en sortir</div>
+        </div>
+        <div class="path-card">
+          <div class="path-card-num">Axe 04 — 10</div>
+          <div class="path-card-text">Dépendance, limites, communication, vulnérabilité, espace, amour conscient…</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPÉRIENCE -->
+  <section style="padding: 7rem 3rem;">
+    <div class="section-exp" style="padding: 0; margin: 0 auto;">
+      <div class="exp-visual fade-up">
+        <div class="exp-circle">
+          <div class="exp-dot"></div>
+          <div class="exp-circle-inner">
+            La scène<br>que tu<br>rejoues
+          </div>
+        </div>
+      </div>
+      <div class="exp-content fade-up">
+        <div class="paths-label">Expérience immersive — Gratuite</div>
+        <h2 class="exp-title">Rejoue la scène</h2>
+        <p class="exp-text">
+          Découvre ce qui se cache derrière ta façon de réagir en amour.
+          Lis les situations proposées, réponds à la question, et découvre le schéma invisible
+          qui dirige tes relations sans que tu l'aies jamais vraiment nommé.
+          <br><br>
+          L'expérience est gratuite et prend deux minutes.
+        </p>
+        <a href="experience.html" class="btn-primary">Commencer l'expérience</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider">
+    <div class="divider-line"></div>
+    <div class="divider-icon">✦</div>
+    <div class="divider-line"></div>
+  </div>
+
+  <!-- LE LIVRE -->
+  <section class="section-book">
+    <div class="book-inner">
+      <div class="book-img-wrap fade-up">
+        <img src="assets/cover.png" alt="S'ouvrir à l'amour" />
+      </div>
+      <div class="book-content fade-up">
+        <div class="paths-label">Le livre</div>
+        <h2 class="book-title">S'ouvrir à l'amour<br>10 axes pour cheminer<br>vers soi</h2>
+        <p class="book-text">
+          10 chapitres. Des exercices pratiques, des témoignages, et une progression qui t'aide à comprendre pourquoi tu réagis comme tu réagis en amour.
+        </p>
+        <div class="book-features">
+          <div class="book-feature">10 chapitres progressifs avec exercices</div>
+          <div class="book-feature">8 témoignages intégraux en annexe</div>
+          <div class="book-feature">Schémas et outils concrets (OSBD, styles d'attachement...)</div>
+          <div class="book-feature">Livraison immédiate en PDF</div>
+        </div>
+        <div class="book-price">15,99 €</div>
+        <div class="book-price-note">Paiement sécurisé · Téléchargement immédiat</div>
+        <a href="https://gumroad.com" target="_blank" class="btn-buy">Obtenir le livre</a>
+        <div class="book-bonus">Audio personnalisé offert avec chaque achat</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <a href="index.html" class="footer-logo">Élodie S.</a>
+    <span class="footer-text">© 2025 Élodie S. · Tous droits réservés</span>
+  </footer>
+
+  <script>
+    // Fade-up on scroll
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
+
+    // Hero immediate
+    document.querySelectorAll('.hero .fade-up').forEach((el, i) => {
+      setTimeout(() => el.classList.add('visible'), 100 + i * 150);
+    });
+  </script>
+</body>
+</html>
