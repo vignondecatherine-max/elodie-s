@@ -533,7 +533,7 @@
                 musiqueElement.volume = Math.max(0, musiqueElement.volume - 0.02);
               } else {
                 musiqueElement.pause();
-                musiqueElement.volume = 0.18;
+                musiqueElement.volume = 0.12;
                 clearInterval(fadeOut);
               }
             }, 100);
@@ -552,7 +552,7 @@
         if (musiqueElement) { musiqueElement.pause(); musiqueElement = null; }
         musiqueElement = new Audio(musiqueSrc);
         musiqueElement.loop = true;
-        musiqueElement.volume = 0.18;
+        musiqueElement.volume = 0.12;
         musiqueElement.play().catch(() => {});
 
         // Lancer auto
@@ -603,15 +603,108 @@
       return `${m}:${sec}`;
     }
 
-    function telechargerAudio() {
+    async function telechargerAudio() {
       if (!audioElement || !audioElement.src) return;
-      const a = document.createElement('a');
-      a.href = audioElement.src;
-      const prenom = document.getElementById('prenom').value.trim() || 'mon-audio';
-      a.download = `audio-${prenom}.mp3`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
+
+      const btn = document.getElementById('btn-download');
+      btn.textContent = 'Mixage en cours...';
+      btn.disabled = true;
+
+      try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        // Charger la voix
+        const voixResponse = await fetch(audioElement.src);
+        const voixBuffer = await voixResponse.arrayBuffer();
+        const voixDecoded = await audioCtx.decodeAudioData(voixBuffer);
+
+        // Charger la musique de fond (même que celle qui joue)
+        const musiqueSrc = musiqueElement ? musiqueElement.src : 'assets/music1.mp3';
+        const musiqueResponse = await fetch(musiqueSrc);
+        const musiqueBuffer = await musiqueResponse.arrayBuffer();
+        const musiqueDecoded = await audioCtx.decodeAudioData(musiqueBuffer);
+
+        // Durée finale = durée de la voix
+        const duree = voixDecoded.duration;
+        const sampleRate = audioCtx.sampleRate;
+        const nbSamples = Math.ceil(duree * sampleRate);
+
+        // Créer buffer de sortie stéréo
+        const outputBuffer = audioCtx.createBuffer(2, nbSamples, sampleRate);
+
+        for (let canal = 0; canal < 2; canal++) {
+          const outputData = outputBuffer.getChannelData(canal);
+          const voixData = voixDecoded.getChannelData(Math.min(canal, voixDecoded.numberOfChannels - 1));
+          const musiqueData = musiqueDecoded.getChannelData(Math.min(canal, musiqueDecoded.numberOfChannels - 1));
+
+          for (let i = 0; i < nbSamples; i++) {
+            const voixSample = i < voixData.length ? voixData[i] : 0;
+            // Musique en boucle
+            const musiqueIndex = i % musiqueData.length;
+            const musiqueSample = musiqueData[musiqueIndex] * 0.12;
+            outputData[i] = Math.max(-1, Math.min(1, voixSample + musiqueSample));
+          }
+        }
+
+        // Encoder en WAV
+        const wavBlob = bufferToWav(outputBuffer);
+        const url = URL.createObjectURL(wavBlob);
+        const a = document.createElement('a');
+        a.href = url;
+        const prenom = document.getElementById('prenom').value.trim() || 'mon-audio';
+        a.download = `audio-${prenom}.wav`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+      } catch(err) {
+        console.error(err);
+        alert("Erreur lors du mixage. Réessaie.");
+      }
+
+      btn.textContent = 'Télécharger mon audio';
+      btn.disabled = false;
+    }
+
+    function bufferToWav(buffer) {
+      const numChannels = buffer.numberOfChannels;
+      const sampleRate = buffer.sampleRate;
+      const numSamples = buffer.length;
+      const bytesPerSample = 2;
+      const blockAlign = numChannels * bytesPerSample;
+      const byteRate = sampleRate * blockAlign;
+      const dataSize = numSamples * blockAlign;
+      const bufferSize = 44 + dataSize;
+      const arrayBuffer = new ArrayBuffer(bufferSize);
+      const view = new DataView(arrayBuffer);
+
+      // WAV header
+      const writeStr = (off, str) => { for (let i = 0; i < str.length; i++) view.setUint8(off + i, str.charCodeAt(i)); };
+      writeStr(0, 'RIFF');
+      view.setUint32(4, 36 + dataSize, true);
+      writeStr(8, 'WAVE');
+      writeStr(12, 'fmt ');
+      view.setUint32(16, 16, true);
+      view.setUint16(20, 1, true);
+      view.setUint16(22, numChannels, true);
+      view.setUint32(24, sampleRate, true);
+      view.setUint32(28, byteRate, true);
+      view.setUint16(32, blockAlign, true);
+      view.setUint16(34, bytesPerSample * 8, true);
+      writeStr(36, 'data');
+      view.setUint32(40, dataSize, true);
+
+      // PCM data
+      let offset = 44;
+      for (let i = 0; i < numSamples; i++) {
+        for (let c = 0; c < numChannels; c++) {
+          const sample = Math.max(-1, Math.min(1, buffer.getChannelData(c)[i]));
+          view.setInt16(offset, sample < 0 ? sample * 32768 : sample * 32767, true);
+          offset += 2;
+        }
+      }
+      return new Blob([arrayBuffer], { type: 'audio/wav' });
     }
 
     function recommencer() {
