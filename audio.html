@@ -229,6 +229,18 @@
       margin-bottom: 2rem;
     }
 
+    .btn-download {
+      display: inline-block; margin-bottom: 0.8rem;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.82rem; font-weight: 500; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--cream);
+      background: rgba(255,253,248,0.08);
+      border: 1px solid rgba(255,253,248,0.2);
+      border-radius: 3px; padding: 0.8rem 1.6rem;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .btn-download:hover { background: rgba(184,92,56,0.2); border-color: var(--terra); }
+
     .btn-restart-audio {
       font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase;
       color: var(--gray); background: none; border: none;
@@ -432,6 +444,10 @@
         Garde cette page dans tes favoris.
       </p>
 
+      <button class="btn-download" id="btn-download" onclick="telechargerAudio()">
+        Télécharger mon audio
+      </button>
+      <br>
       <button class="btn-restart-audio" onclick="recommencer()">
         Créer un nouvel audio
       </button>
@@ -585,6 +601,17 @@
       const m = Math.floor(s / 60);
       const sec = Math.floor(s % 60).toString().padStart(2, '0');
       return `${m}:${sec}`;
+    }
+
+    function telechargerAudio() {
+      if (!audioElement || !audioElement.src) return;
+      const a = document.createElement('a');
+      a.href = audioElement.src;
+      const prenom = document.getElementById('prenom').value.trim() || 'mon-audio';
+      a.download = `audio-${prenom}.mp3`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
     }
 
     function recommencer() {
