@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin — Générer un lien audio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --terra: #B85C38; --dark: #2C1A0E;
+      --sand: #F5EDE4; --cream: #FFFDF8; --gray: #9A8A7A; --grayl: #E0D4CC;
+    }
+    body {
+      font-family: 'Jost', sans-serif;
+      background: var(--dark); color: var(--cream);
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    }
+    .card {
+      background: rgba(255,253,248,0.05);
+      border: 1px solid rgba(255,253,248,0.1);
+      border-radius: 8px; padding: 3rem;
+      max-width: 480px; width: 90%; text-align: center;
+    }
+    .card-tag {
+      font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--terra); margin-bottom: 1rem;
+    }
+    .card-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem; font-weight: 300;
+      color: var(--cream); margin-bottom: 0.6rem;
+    }
+    .card-sub {
+      font-size: 0.85rem; color: rgba(255,253,248,0.4);
+      margin-bottom: 2.5rem; line-height: 1.7;
+    }
+
+    /* Mot de passe */
+    .password-section { margin-bottom: 2rem; }
+    .pwd-input {
+      width: 100%; background: rgba(255,253,248,0.06);
+      border: 1px solid rgba(255,253,248,0.15);
+      border-radius: 3px; padding: 0.85rem 1.2rem;
+      font-family: 'Jost', sans-serif; font-size: 0.95rem;
+      color: var(--cream); outline: none; text-align: center;
+      letter-spacing: 0.1em; margin-bottom: 0.8rem;
+      transition: border-color 0.2s;
+    }
+    .pwd-input:focus { border-color: var(--terra); }
+    .pwd-input::placeholder { color: rgba(255,253,248,0.2); letter-spacing: 0; }
+
+    .btn {
+      width: 100%; font-family: 'Jost', sans-serif;
+      font-size: 0.85rem; font-weight: 500; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--dark);
+      background: var(--cream); padding: 1rem;
+      border: none; border-radius: 3px; cursor: pointer;
+      transition: all 0.25s;
+    }
+    .btn:hover { background: var(--terra); color: white; }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* Résultat */
+    .result { display: none; margin-top: 2rem; }
+    .result.active { display: block; }
+    .result-label {
+      font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--terra); margin-bottom: 0.8rem;
+    }
+    .token-display {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem; letter-spacing: 0.15em;
+      color: var(--cream); margin-bottom: 1rem;
+    }
+    .link-display {
+      background: rgba(255,253,248,0.06);
+      border: 1px solid rgba(255,253,248,0.12);
+      border-radius: 3px; padding: 0.8rem 1rem;
+      font-size: 0.75rem; color: rgba(255,253,248,0.5);
+      word-break: break-all; margin-bottom: 1.2rem;
+      line-height: 1.6; text-align: left;
+    }
+    .link-full {
+      font-size: 0.82rem; color: var(--terra);
+      font-weight: 500;
+    }
+    .btn-copy {
+      width: 100%; font-family: 'Jost', sans-serif;
+      font-size: 0.82rem; font-weight: 500; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--cream);
+      background: rgba(184,92,56,0.2);
+      border: 1px solid var(--terra);
+      border-radius: 3px; padding: 0.85rem; cursor: pointer;
+      transition: all 0.2s; margin-bottom: 0.8rem;
+    }
+    .btn-copy:hover { background: var(--terra); }
+    .btn-new {
+      font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--gray); background: none; border: none;
+      cursor: pointer; font-family: 'Jost', sans-serif;
+      transition: color 0.2s;
+    }
+    .btn-new:hover { color: var(--terra); }
+
+    .error-msg {
+      color: #e05050; font-size: 0.82rem; margin-top: 0.6rem;
+    }
+    .copied-msg {
+      color: #70b870; font-size: 0.78rem; margin-top: 0.5rem;
+      display: none;
+    }
+    .copied-msg.active { display: block; }
+
+    /* Auth section */
+    .auth-section { }
+    .main-section { display: none; }
+    .main-section.active { display: block; }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <div class="card-tag">Élodie S. — Administration</div>
+    <h1 class="card-title">Générer un lien audio</h1>
+    <p class="card-sub">
+      Chaque lien est à usage unique.<br>
+      Envoie-le à ton acheteur après sa commande.
+    </p>
+
+    <!-- Authentification -->
+    <div class="auth-section" id="auth-section">
+      <div class="password-section">
+        <input type="password" class="pwd-input" id="pwd-input"
+               placeholder="Mot de passe admin"
+               onkeydown="if(event.key==='Enter') verifierMdp()" />
+        <div class="error-msg" id="pwd-error"></div>
+      </div>
+      <button class="btn" onclick="verifierMdp()">Accéder</button>
+    </div>
+
+    <!-- Interface principale -->
+    <div class="main-section" id="main-section">
+      <button class="btn" id="btn-gen" onclick="genererLien()">
+        Générer un nouveau lien
+      </button>
+
+      <div class="result" id="result">
+        <div class="result-label">Lien à envoyer à l'acheteur</div>
+        <div class="token-display" id="token-display"></div>
+        <div class="link-display">
+          <span class="link-full" id="link-display"></span>
+        </div>
+        <button class="btn-copy" onclick="copierLien()">Copier le lien</button>
+        <div class="copied-msg" id="copied-msg">✓ Lien copié !</div>
+        <br>
+        <button class="btn-new" onclick="nouveau()">Générer un autre lien</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ⚠️ CHANGE CE MOT DE PASSE avant de mettre en ligne
+    const ADMIN_PASSWORD = "elodie2025";
+
+    function verifierMdp() {
+      const pwd = document.getElementById('pwd-input').value;
+      if (pwd === ADMIN_PASSWORD) {
+        document.getElementById('auth-section').style.display = 'none';
+        document.getElementById('main-section').classList.add('active');
+      } else {
+        document.getElementById('pwd-error').textContent = 'Mot de passe incorrect.';
+      }
+    }
+
+    async function genererLien() {
+      const btn = document.getElementById('btn-gen');
+      btn.disabled = true;
+      btn.textContent = 'Génération...';
+
+      try {
+        const response = await fetch('/.netlify/functions/generate-token', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({}),
+        });
+
+        const data = await response.json();
+
+        if (data.token) {
+          const baseUrl = window.location.origin;
+          const lien = `${baseUrl}/audio.html?token=${data.token}`;
+
+          document.getElementById('token-display').textContent = data.token;
+          document.getElementById('link-display').textContent = lien;
+          document.getElementById('result').classList.add('active');
+        } else {
+          alert('Erreur lors de la génération. Réessaie.');
+        }
+
+      } catch(err) {
+        alert('Erreur : ' + err.message);
+      }
+
+      btn.disabled = false;
+      btn.textContent = 'Générer un nouveau lien';
+    }
+
+    function copierLien() {
+      const lien = document.getElementById('link-display').textContent;
+      navigator.clipboard.writeText(lien).then(() => {
+        document.getElementById('copied-msg').classList.add('active');
+        setTimeout(() => {
+          document.getElementById('copied-msg').classList.remove('active');
+        }, 2000);
+      });
+    }
+
+    function nouveau() {
+      document.getElementById('result').classList.remove('active');
+      document.getElementById('copied-msg').classList.remove('active');
+    }
+  </script>
+
+</body>
+</html>

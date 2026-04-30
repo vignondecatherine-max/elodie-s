@@ -20,7 +20,7 @@ exports.handler = async function(event, context) {
         model: 'tts-1',
         voice: 'nova',
         input: texte,
-        speed: 0.92,
+        speed: 1.0,
       }),
     });
 

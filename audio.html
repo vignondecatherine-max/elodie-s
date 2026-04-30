@@ -477,6 +477,41 @@
     let isPlaying = false;
 
     // ── GÉNÉRATION ───────────────────────────────────────────
+    // Récupérer le token depuis l'URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const TOKEN = urlParams.get('token');
+
+    // Vérifier le token au chargement
+    window.addEventListener('load', async () => {
+      if (!TOKEN) {
+        document.body.innerHTML = `
+          <div style="display:flex;align-items:center;justify-content:center;min-height:100vh;font-family:Georgia,serif;text-align:center;padding:2rem;">
+            <div>
+              <p style="font-size:1.1rem;color:rgba(255,253,248,0.6);margin-bottom:1rem;">Ce lien n'est pas valide.</p>
+              <p style="font-size:0.85rem;color:rgba(255,253,248,0.35);">Si tu as acheté le livre, vérifie l'email de confirmation.</p>
+            </div>
+          </div>`;
+        return;
+      }
+
+      const res = await fetch('/.netlify/functions/verify-token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: TOKEN, consume: false }),
+      });
+      const data = await res.json();
+
+      if (!data.valid) {
+        document.body.innerHTML = `
+          <div style="display:flex;align-items:center;justify-content:center;min-height:100vh;font-family:Georgia,serif;text-align:center;padding:2rem;">
+            <div>
+              <p style="font-size:1.1rem;color:rgba(255,253,248,0.6);margin-bottom:1rem;">${data.error}</p>
+              <p style="font-size:0.85rem;color:rgba(255,253,248,0.35);">Si tu penses que c'est une erreur, contacte-nous.</p>
+            </div>
+          </div>`;
+      }
+    });
+
     async function genererAudio() {
       const prenom = document.getElementById('prenom').value.trim();
       const q1 = document.querySelector('input[name="q1"]:checked')?.value;
@@ -485,6 +520,18 @@
 
       if (!prenom) { alert("Écris ton prénom pour continuer."); return; }
       if (!q1 || !q2 || !q3) { alert("Réponds aux trois questions pour générer ton audio."); return; }
+
+      // Vérifier et consommer le token
+      const verif = await fetch('/.netlify/functions/verify-token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: TOKEN, consume: true }),
+      });
+      const verifData = await verif.json();
+      if (!verifData.valid) {
+        alert(verifData.error);
+        return;
+      }
 
       // Assemblage du texte
       const texte = `${prenom}. ${BLOCS[q1]} ${BLOCS[q2]} ${BLOCS[q3]} ${prenom}.`;
