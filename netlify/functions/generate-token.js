@@ -1,4 +1,4 @@
-const { getStore } = require("@netlify/blobs");
+const https = require('https');
 
 exports.handler = async function(event, context) {
   if (event.httpMethod !== 'POST') {
@@ -6,22 +6,34 @@ exports.handler = async function(event, context) {
   }
 
   try {
+    // Générer un token unique
     const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
     let token = '';
     for (let i = 0; i < 8; i++) {
       token += chars[Math.floor(Math.random() * chars.length)];
     }
 
-    const store = getStore({
-      name: "audio-tokens",
-      siteID: process.env.NETLIFY_SITE_ID,
-      token: process.env.NETLIFY_ACCESS_TOKEN,
+    // Stocker via l'API Netlify sans dépendance externe
+    const body = JSON.stringify({
+      key: `token_${token}`,
+      value: JSON.stringify({ used: false, createdAt: new Date().toISOString() })
     });
 
-    await store.set(token, JSON.stringify({
-      used: false,
-      createdAt: new Date().toISOString(),
-    }));
+    await new Promise((resolve, reject) => {
+      const req = https.request({
+        hostname: 'api.netlify.com',
+        path: `/api/v1/sites/${process.env.NETLIFY_SITE_ID}/env`,
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${process.env.NETLIFY_ACCESS_TOKEN}`,
+          'Content-Type': 'application/json',
+          'Content-Length': Buffer.byteLength(body)
+        }
+      }, resolve);
+      req.on('error', reject);
+      req.write(body);
+      req.end();
+    });
 
     return {
       statusCode: 200,
