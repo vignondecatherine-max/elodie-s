@@ -260,9 +260,9 @@
   <script>
     // Musiques de fond — sélection aléatoire à chaque génération
     const MUSIQUES = [
-      "assets/music1.mp3",
-      "assets/music2.mp3",
-      "assets/music3.mp3",
+      { src: "assets/music1.mp3", volume: 0.12 },
+      { src: "assets/music2.mp3", volume: 0.12 },
+      { src: "assets/music3.mp3", volume: 0.22 }, // Loretto : volume plus faible à la source
     ];
     let musiqueElement = null;
   </script>
@@ -501,6 +501,15 @@
       });
       const data = await res.json();
 
+      // Marquer le token comme utilisé dès le chargement
+      if (data.valid) {
+        await fetch('/.netlify/functions/verify-token', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token: TOKEN, consume: true }),
+        });
+      }
+
       if (!data.valid) {
         document.body.innerHTML = `
           <div style="display:flex;align-items:center;justify-content:center;min-height:100vh;font-family:Georgia,serif;text-align:center;padding:2rem;">
@@ -521,17 +530,7 @@
       if (!prenom) { alert("Écris ton prénom pour continuer."); return; }
       if (!q1 || !q2 || !q3) { alert("Réponds aux trois questions pour générer ton audio."); return; }
 
-      // Vérifier et consommer le token
-      const verif = await fetch('/.netlify/functions/verify-token', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token: TOKEN, consume: true }),
-      });
-      const verifData = await verif.json();
-      if (!verifData.valid) {
-        alert(verifData.error);
-        return;
-      }
+      // Token déjà consommé au chargement de la page
 
       // Assemblage du texte
       const texte = `${prenom}. ${BLOCS[q1]} ${BLOCS[q2]} ${BLOCS[q3]} ${prenom}.`;
@@ -580,7 +579,6 @@
                 musiqueElement.volume = Math.max(0, musiqueElement.volume - 0.02);
               } else {
                 musiqueElement.pause();
-                musiqueElement.volume = 0.12;
                 clearInterval(fadeOut);
               }
             }, 100);
@@ -595,11 +593,13 @@
         document.getElementById('audio-section').scrollIntoView({ behavior: 'smooth' });
 
         // Lancer musique de fond aléatoire
-        const musiqueSrc = MUSIQUES[Math.floor(Math.random() * MUSIQUES.length)];
+        const musiqueIndex = Math.floor(Math.random() * MUSIQUES.length);
+        const musiqueSrc = MUSIQUES[musiqueIndex].src;
+        const musiqueVolume = MUSIQUES[musiqueIndex].volume;
         if (musiqueElement) { musiqueElement.pause(); musiqueElement = null; }
         musiqueElement = new Audio(musiqueSrc);
         musiqueElement.loop = true;
-        musiqueElement.volume = 0.12;
+        musiqueElement.volume = musiqueVolume;
         musiqueElement.play().catch(() => {});
 
         // Lancer auto
@@ -688,7 +688,9 @@
             const voixSample = i < voixData.length ? voixData[i] : 0;
             // Musique en boucle
             const musiqueIndex = i % musiqueData.length;
-            const musiqueSample = musiqueData[musiqueIndex] * 0.12;
+            // Volume adapté selon la musique choisie
+          const mixVolume = musiqueElement ? musiqueElement.volume : 0.12;
+          const musiqueSample = musiqueData[musiqueIndex] * mixVolume;
             outputData[i] = Math.max(-1, Math.min(1, voixSample + musiqueSample));
           }
         }
