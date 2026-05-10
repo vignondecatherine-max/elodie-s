@@ -608,6 +608,7 @@
         const musiqueIndex = Math.floor(Math.random() * MUSIQUES.length);
         const musiqueSrc = MUSIQUES[musiqueIndex].src;
         const musiqueVolume = MUSIQUES[musiqueIndex].volume;
+        let musiqueVolumeChoisi = musiqueVolume;
         if (musiqueElement) { musiqueElement.pause(); musiqueElement = null; }
         musiqueElement = new Audio(musiqueSrc);
         musiqueElement.loop = true;
@@ -701,7 +702,7 @@
             // Musique en boucle
             const musiqueIndex = i % musiqueData.length;
             // Volume adapté selon la musique choisie
-          const mixVolume = musiqueElement ? musiqueElement.volume : 0.12;
+         const mixVolume = musiqueVolumeChoisi || 0.12;
           const musiqueSample = musiqueData[musiqueIndex] * mixVolume;
             outputData[i] = Math.max(-1, Math.min(1, voixSample + musiqueSample));
           }
